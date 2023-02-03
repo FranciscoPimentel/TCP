@@ -5,9 +5,8 @@ Arquivo instalação TCP/haproxy.yml
 Arquivo de Hosts: TCP/servers_haproxy
 ## Comandos úteis, recomendados na documentação, link: https://www.haproxy.com/documentation/hapee/latest/management/ansible/
 
-ansible -i /media/francisco/midia/GIT/TCP/haproxy/servers_haproxy loadbalancers -m ping
-ansible -i /media/francisco/midia/GIT/TCP/haproxy/servers_haproxy loadbalancers -u root -a "netstat -tlpn"
-ansible -i /media/francisco/midia/GIT/TCP/haproxy/servers_haproxy loadbalancers -u root -m shell -a "netstat -tlpn | grep :80"
-ansible -i /media/francisco/midia/GIT/TCP/haproxy/servers_haproxy loadbalancers -u root -m service -a "name=hapee-2.6-lb state=started" --check
-
-ansible -i /media/francisco/midia/GIT/TCP/haproxy/servers_haproxy loadbalancers -u root -m service -a "name=hapee-2.6-lb state=reloaded"
+ansible -i ./servers_haproxy loadbalancers -m ping
+ansible -i ./servers_haproxy loadbalancers -u root -a "netstat -tlpn"
+ansible -i ./servers_haproxy loadbalancers -u root -m shell -a "netstat -tlpn | grep :80"
+ansible -i ./servers_haproxy loadbalancers -u root -m service -a "name=hapee-2.6-lb state=started" --check
+ansible -i ./servers_haproxy loadbalancers -u root -m service -a "name=hapee-2.6-lb state=reloaded"
