@@ -1,0 +1,54 @@
+---
+##Instalação HaProxy
+- hosts: loadbalancers
+  remote_user: root
+  tasks:
+- name: Instalção haproxy
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  vars:
+    packages:
+    - haproxy
+
+- name: Config haproxy alteração
+  ansible.builtin.template:
+    src: ./config/haproxy_config.cfg
+    dest: /etc/haproxy/haproxy.cfg
+  register: haproxyConfigured
+
+- name: Configuração IP Virtual
+  ansible.builtin.systemd:
+  src: ./config/ipvirutal
+  dest: "/run/systemd/network/10-netplan-ens160.network"
+
+- name: restart haproxy
+  ansible.builtin.systemd:
+    name: haproxy
+    state: restarted
+  when: haproxyConfigured.changed
+---
+##
+- hosts: loadbalancers
+  remote_user: root
+  tasks:
+- name: Instalação keepalived
+  ansible.builtin.apt:
+    name: keepalived
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: configure keepalived
+  ansible.builtin.template:
+    src: templates/etc/keepalived/keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  register: keepalivedConfigured
+
+- name: restart keepalived
+  ansible.builtin.systemd:
+    name: keepalived
+    state: restarted
+  when: keepalivedConfigured.changed
